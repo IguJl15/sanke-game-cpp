@@ -12,7 +12,7 @@ CC = g++
 LINKER_FLAGS = -lSDL2
 
 #OBJ_NAME specifies the name of our exectuable
-OBJ_NAME = hello_sdl
+OBJ_NAME = hello_sdl.out
 
 #This is the target that compiles our executable
 all : $(OBJS)
