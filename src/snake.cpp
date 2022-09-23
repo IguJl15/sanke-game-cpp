@@ -1,5 +1,6 @@
 #include <stdlib.h>
-#include "headers/snake.hpp"
+#include <iostream>
+#include "../include/headers/snake.hpp"
 
 #define MAX_LENGTH 1024
 
@@ -11,7 +12,7 @@ Snake::Snake(int xInitPos, int yInitPos, unsigned int initLength = 3)
 
 	length = initLength;
 
-	body = (Node *)malloc(MAX_LENGTH * sizeof(Node));
+	body = (BodyPart *)malloc(MAX_LENGTH * sizeof(BodyPart));
 
 	body->position.x = xInitPos;
 	body->position.y = yInitPos;
@@ -79,13 +80,15 @@ void Snake::changeDirection(Direction direction)
 
 void Snake::growUp()
 {
+	std::cout << "Grow up" << std::endl;
+	
 	// last body part
-	body[length - 1].next = &body[length];
-
-	// new body part
-	body[length].position.x = body[length - 1].position.x - 1;
-	body[length].position.y = body[length - 1].position.y;
-	body[length].next = nullptr;
+	BodyPart* tail = &body[length - 1];
+	BodyPart* newTail = &body[length];
+	
+	newTail->position.x = tail->position.x;
+	newTail->position.y = tail->position.y;
+	newTail->next = nullptr;
 
 	length++;
 }

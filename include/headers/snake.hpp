@@ -9,7 +9,7 @@ class Snake
 {
 public:
 	Direction currentDir = Right;
-	Node *body;
+	BodyPart *body;
 	bool canChangeDir;
 
 	int length;

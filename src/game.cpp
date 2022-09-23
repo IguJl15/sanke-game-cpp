@@ -1,12 +1,12 @@
-#include "headers/game.hpp"
+#include "../include/headers/game.hpp"
 #include <iostream>
 
 Game::Game(unsigned int width, unsigned int height)
 {
     defaultWhiteColor = SDL_Color();
     defaultWhiteColor.r = 0xff;
-    defaultWhiteColor.g = 0xff;
-    defaultWhiteColor.b = 0xff;
+    defaultWhiteColor.g = 0xdd;
+    defaultWhiteColor.b = 0x99;
     defaultWhiteColor.a = 0xff;
 
     // initialize SDL
@@ -23,6 +23,8 @@ Game::Game(unsigned int width, unsigned int height)
     renderer = SDL_CreateRenderer(screen, -1, 0);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    dirChanges = Queue<Direction>(5);
 
     bodyRects = (SDL_Rect *)malloc(MAX_LENGTH * sizeof(SDL_Rect));
 
@@ -51,11 +53,21 @@ void Game::update()
 {
     if (!isPaused)
     {
+        if (!dirChanges.isEmpty())
+        {
+            cobra.changeDirection(dirChanges.deQueue());
+        }
+
         cobra.moveFoward();
+
+        std::cout << "Tamanho cobra: " << cobra.length << std::endl;
+            
         for (int i = 0; i < cobra.length; i++)
         {
             bodyRects[i].x = cobra.body[i].position.x * GRID_SIZE;
             bodyRects[i].y = cobra.body[i].position.y * GRID_SIZE;
+            bodyRects[i].h = rectSize;
+            bodyRects[i].w = rectSize;
         }
     }
 }
@@ -70,10 +82,10 @@ void Game::drawRectangle(SDL_Rect *rect, SDL_Color *color)
 
 void Game::drawAllRectangles(SDL_Rect *rects, uint count, SDL_Color *color)
 {
-
     SDL_SetRenderDrawColor(renderer,
                            color->r, color->g,
                            color->b, color->a);
+
     SDL_RenderFillRects(renderer, rects, count);
 }
 
@@ -86,29 +98,33 @@ void Game::input()
 
     if (SDL_PollEvent(&event))
     {
-        // std::cout << "Button pressed " << std::endl;
-        // std::cout << "Type: " << event.type << std::endl;
-        // std::cout << "Code: " << event.key.keysym.sym << std::endl;
-
         // an event was found
         if (event.type == SDL_KEYDOWN)
         {
             switch (event.key.keysym.sym)
             {
             case SDLK_w:
-                cobra.changeDirection(Up);
+
+                if ((dirChanges.isEmpty() || dirChanges.rear->value != Up) && !dirChanges.isFull())
+                    dirChanges.enQueue(Up);
                 break;
             case SDLK_s:
-                cobra.changeDirection(Down);
+                if ((dirChanges.isEmpty() || dirChanges.rear->value != Down) && !dirChanges.isFull())
+                    dirChanges.enQueue(Down);
                 break;
             case SDLK_a:
-                cobra.changeDirection(Left);
+                if ((dirChanges.isEmpty() || dirChanges.rear->value != Left) && !dirChanges.isFull())
+                    dirChanges.enQueue(Left);
                 break;
             case SDLK_d:
-                cobra.changeDirection(Right);
+                if ((dirChanges.isEmpty() || dirChanges.rear->value != Right) && !dirChanges.isFull())
+                    dirChanges.enQueue(Right);
                 break;
             case SDLK_ESCAPE:
                 isRunning = false;
+                break;
+            case SDLK_p:
+            cobra.growUp();
                 break;
             default:
                 break;

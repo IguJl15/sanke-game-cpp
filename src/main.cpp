@@ -1,10 +1,10 @@
 #include <iostream>
-#include "headers/game.hpp"
+#include "../include/headers/game.hpp"
 
 int main()
 {
     Game game = Game(1280, 720);
-    double UPDATES_PER_SEC = 5;
+    double UPDATES_PER_SEC = 10;
     double targetUpdateFrameTime = (1 / UPDATES_PER_SEC) * 1000;
     double ellapsedMs;
     double lag = 0;

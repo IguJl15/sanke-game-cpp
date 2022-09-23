@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include "queue.hpp"
 #include "snake.hpp"
 
 #define MAX_LENGTH 1024
@@ -16,6 +17,7 @@ private:
     SDL_Rect *bodyRects;
     uint rectSize = WINDOW_HEIGHT / GRID_SIZE;
     SDL_Color defaultWhiteColor;
+    Queue<Direction> dirChanges;
 
 public:
     bool isRunning = true;

@@ -1,5 +1,5 @@
 
-OBJS = main.cpp game.cpp snake.cpp
+OBJS = src/main.cpp src/game.cpp src/snake.cpp
 
 #CC specifies which compiler we're using
 CC = g++
