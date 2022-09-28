@@ -26,21 +26,22 @@ public:
 template <typename T>
 Queue<T>::Queue()
 {
-    maxCapacity = 0;
+    maxCapacity = -1;
+}
+
+template <typename T>
+Queue<T>::Queue(int length)
+{
+    maxCapacity = length;
 }
 
 template <typename T>
 Queue<T>::~Queue()
 {
-    for (int i = 0; i < count; i++)
+    while (!isEmpty())
     {
         deQueue();
     }
-}
-template <typename T>
-Queue<T>::Queue(int length)
-{
-    maxCapacity = length;
 }
 
 template <typename T>
@@ -84,18 +85,17 @@ T Queue<T>::deQueue()
 
     if (isEmpty())
     {
+        free(front);
         rear = nullptr;
         front = nullptr;
+        return value;
     }
-    else
-    {
-        front->next != nullptr;
-        Node<T> *newFront = front->next;
-        // Free current front Node
-        free(front);
-        // Use the next Node as front
-        front = newFront;
-    }
+
+    Node<T> *newFront = front->next;
+    // Free current front Node
+    free(front);
+    // Use the next Node as front
+    front = newFront;
 
     return value;
 }
